@@ -1,0 +1,74 @@
+.gitignore
+  s_e01496cf0409d8::t_f87c3e3d3e059f 5
+  s_e01496cf0409d8::t_76af414832f057 6-13
+backend/app/main.py
+  s_e01496cf0409d8::t_9a9176938b0138 5,7,10
+backend/core/models.py
+  s_e01496cf0409d8::t_9d9013641d078c 4,13
+  s_e01496cf0409d8::t_d623a233a2b261 1-3,5-12,14-36
+backend/core/__init__.py
+  s_e01496cf0409d8::t_653d21a6e70acf 1
+frontend/src/App.vue
+  s_e01496cf0409d8::t_6c24022742783d 3-23,31-39,45,48,51-97,121-145
+backend/pipelines/chunk.py
+  s_e01496cf0409d8::t_f3745dee6c4879 5-12,22-24,26,30,34,37,39-40,44-48,66,103,129
+  s_e01496cf0409d8::t_df5dc69cd30658 25,27-29,31-33,35-36,38,41-43,49-65,67-73,75-78,80-102,104-112,114-128
+  s_e01496cf0409d8::t_f54efa5829839d 1-4,13-21,74,79,113
+backend/pipelines/ingest.py
+  s_e01496cf0409d8::t_439bdb7de56ba3 57
+  s_e01496cf0409d8::t_b6761a1be6b78c 1-56,58-106
+backend/pipelines/extract.py
+  s_e01496cf0409d8::t_218cc2d3af6983 1-53
+backend/retrieval/rerank.py
+  s_e01496cf0409d8::t_07c69a0a5e4367 1-6
+backend/pipelines/embed.py
+  s_e01496cf0409d8::t_e6cb9207f8bdda 1-43
+README.md
+  s_e01496cf0409d8::t_7ac42e3adf8b20 3-49,57,62,65-81
+backend/api/__init__.py
+  s_e01496cf0409d8::t_04becee162bdf4 1
+backend/requirements.txt
+  s_e01496cf0409d8::t_1b458fb84ce1dc 6-13
+backend/retrieval/qa.py
+  s_e01496cf0409d8::t_f5bfbf18e6c654 45-46
+  s_e01496cf0409d8::t_6a873583b573b0 25
+  s_e01496cf0409d8::t_a7bb822db5c173 1-5,7-24,27-36,38-44,47-52
+  s_e01496cf0409d8::t_0adc0bf347ee28 53-54,56-70
+  s_e01496cf0409d8::t_8c3d4c796fa509 6
+  s_e01496cf0409d8::t_1fccda300d198d 26
+  s_e01496cf0409d8::t_f07ce08adbed69 55
+  s_e01496cf0409d8::t_741a3803e60400 37
+backend/.env.example
+  s_e01496cf0409d8::t_e3a05cfc63e82d 1,8-15
+backend/pipelines/__init__.py
+  s_e01496cf0409d8::t_a0abe0084c4bf1 1
+backend/app/config.py
+  s_e01496cf0409d8::t_dafc35d30b2a4e 1,19,32-36
+  s_e01496cf0409d8::t_1a146312ce4779 22-31
+backend/pipelines/clean.py
+  s_e01496cf0409d8::t_da8cceef25276f 1-15
+backend/api/app.py
+  s_e01496cf0409d8::t_a84b1fd5665f62 1-72
+backend/retrieval/search.py
+  s_e01496cf0409d8::t_c85683276ae798 1-36
+backend/retrieval/__init__.py
+  s_e01496cf0409d8::t_696bc03632e3ea 1
+backend/demo_pdf_qa.py
+  s_e01496cf0409d8::t_3a27f1b0396e6b 1-56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "ea32fe4cb0ddd834f03b9998cef871ab4bfe849f",
+  "prompts": {},
+  "sessions": {
+    "s_e01496cf0409d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3c034b4f-5e85-4de2-ade8-285f763860d4",
+        "model": "default"
+      },
+      "human_author": null
+    }
+  }
+}
