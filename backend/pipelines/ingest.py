@@ -9,7 +9,7 @@ from pathlib import Path
 import chromadb
 
 from app.config import BACKEND_ROOT, settings
-from core.models import Chunk, Document, RawSource
+from core.models import Document, RawSource
 from pipelines.chunk import build_chunks
 from pipelines.clean import clean_text
 from pipelines.embed import embed_chunks
