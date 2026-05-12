@@ -1,0 +1,19 @@
+backend/pipelines/ingest.py
+  s_e01496cf0409d8::t_78b3ec9f2644d2 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "73e7ed155e5dcebd3e0bba8034b796de098c669e",
+  "prompts": {},
+  "sessions": {
+    "s_e01496cf0409d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3c034b4f-5e85-4de2-ade8-285f763860d4",
+        "model": "default"
+      },
+      "human_author": "jser <87244899@qq.com>"
+    }
+  }
+}
