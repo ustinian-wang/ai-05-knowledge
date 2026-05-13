@@ -1,0 +1,20 @@
+frontend/src/App.vue
+  s_e01496cf0409d8::t_d8301c5f2970a6 52-58,61,65-106,124-125,127-129,153-170,202-203,210-211,220,245-249,252,258,265,272-273,279-285,287-293,296,420-586
+  s_e01496cf0409d8::t_05bd4c04eabeb4 266-270,277
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "ff59104961ea154a8003b94dfbab0e8fd4fc5f11",
+  "prompts": {},
+  "sessions": {
+    "s_e01496cf0409d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3c034b4f-5e85-4de2-ade8-285f763860d4",
+        "model": "default"
+      },
+      "human_author": "jser <87244899@qq.com>"
+    }
+  }
+}
