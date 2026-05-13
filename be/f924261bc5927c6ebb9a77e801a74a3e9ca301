@@ -1,0 +1,23 @@
+backend/.env.example
+  s_e01496cf0409d8::t_fa0596b2e6f45d 6
+backend/app/config.py
+  s_e01496cf0409d8::t_95d81dfe886ad3 14-30,40-51,70-78,84-88,90-110,112-118,130
+README.md
+  s_e01496cf0409d8::t_41b1f5f95c5e55 12,15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "bef924261bc5927c6ebb9a77e801a74a3e9ca301",
+  "prompts": {},
+  "sessions": {
+    "s_e01496cf0409d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3c034b4f-5e85-4de2-ade8-285f763860d4",
+        "model": "default"
+      },
+      "human_author": "jser <87244899@qq.com>"
+    }
+  }
+}
