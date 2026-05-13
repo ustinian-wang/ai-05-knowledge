@@ -1,0 +1,31 @@
+backend/app/config.py
+  s_e01496cf0409d8::t_ae64d3c907fd7a 1,4,7,12-58,62-87
+backend/retrieval/qa.py
+  s_e01496cf0409d8::t_8ac2064235bead 49,52,54
+  s_e01496cf0409d8::t_8e3effb7404120 62
+  s_e01496cf0409d8::t_1c2bd19d132770 6-11
+  s_e01496cf0409d8::t_e3227a42f23a4c 73-77
+README.md
+  s_e01496cf0409d8::t_e12105d87f6522 7-17
+backend/.env.example
+  s_e01496cf0409d8::t_81e38888eb45ba 2-3,5-6,8-14
+backend/api/app.py
+  s_e01496cf0409d8::t_2246f8b2f24b25 49-50
+  s_e01496cf0409d8::t_a45f166c939341 10-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "032cff81dc0fa3efb9cf1fad53540ee451828bb4",
+  "prompts": {},
+  "sessions": {
+    "s_e01496cf0409d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3c034b4f-5e85-4de2-ade8-285f763860d4",
+        "model": "default"
+      },
+      "human_author": "jser <87244899@qq.com>"
+    }
+  }
+}
