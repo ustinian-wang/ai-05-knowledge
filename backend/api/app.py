@@ -17,6 +17,7 @@ from app.config import (
     load_settings,
     resolved_chat_model,
     settings,
+    spark_http_password_configured,
 )
 from pipelines.documents import list_documents
 from pipelines.ingest import ingest_bytes, ingest_file
@@ -54,6 +55,7 @@ def create_app() -> FastAPI:
             "embedding_model": settings.embedding_model,
             "llm_gateway_spark": is_spark_gateway(),
             "llm_chat_model": resolved_chat_model(),
+            "spark_http_api_password_set": spark_http_password_configured(),
         }
 
     @app.post("/api/v1/rag/ingest")

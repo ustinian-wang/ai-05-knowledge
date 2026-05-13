@@ -25,6 +25,10 @@ def _spark_intent_from_env() -> bool:
     base = os.getenv("OPENAI_BASE_URL", "").strip().lower()
     model = os.getenv("OPENAI_MODEL", "").strip().lower()
     key = os.getenv("OPENAI_API_KEY", "").strip()
+    if sanitize_http_bearer_secret(os.getenv("SPARK_HTTP_API_PASSWORD", "")):
+        return True
+    if sanitize_http_bearer_secret(os.getenv("XFYUN_HTTP_API_PASSWORD", "")):
+        return True
     return (
         "xf-yun.com" in base
         or model == "lite"
@@ -40,7 +44,13 @@ def _merge_writemd_openai_if_needed() -> None:
     if not sibling.is_file():
         return
     vals = dotenv_values(sibling)
-    for key in ("OPENAI_API_KEY", "OPENAI_BASE_URL", "OPENAI_MODEL"):
+    for key in (
+        "OPENAI_API_KEY",
+        "OPENAI_BASE_URL",
+        "OPENAI_MODEL",
+        "SPARK_HTTP_API_PASSWORD",
+        "XFYUN_HTTP_API_PASSWORD",
+    ):
         if os.getenv(key, "").strip():
             continue
         raw = vals.get(key)
@@ -85,6 +95,41 @@ def resolved_chat_model() -> str:
     if is_spark_gateway():
         return "lite"
     return "gpt-4o-mini"
+
+
+def sanitize_http_bearer_secret(raw: str) -> str:
+    """去掉首尾空白、包裹引号、重复的 Bearer 前缀（SDK 会自行加 Bearer）。"""
+    s = (raw or "").strip()
+    if len(s) >= 2 and ((s[0] == s[-1] == '"') or (s[0] == s[-1] == "'")):
+        s = s[1:-1].strip()
+    low = s[:7].lower()
+    if low == "bearer ":
+        s = s[7:].strip()
+    return s
+
+
+def spark_chat_api_key() -> str:
+    """
+    星火 HTTP（OpenAI 兼容）鉴权串：须为控制台「HTTP 服务接口认证」里的 **APIPassword**。
+
+    若仅配置 APPID:APISecret（WebSocket 形态），网关常见报错：apikey not found / HMAC。
+    此时请在 .env 设置 SPARK_HTTP_API_PASSWORD=你的 APIPassword（可与 writemd 共用变量名）。
+    """
+    load_settings()
+    for name in ("SPARK_HTTP_API_PASSWORD", "XFYUN_HTTP_API_PASSWORD"):
+        v = sanitize_http_bearer_secret(os.getenv(name, ""))
+        if v:
+            return v
+    return sanitize_http_bearer_secret(os.getenv("OPENAI_API_KEY", ""))
+
+
+def spark_http_password_configured() -> bool:
+    """是否已配置专用 HTTP APIPassword（推荐，避免与 WS 密钥混用）。"""
+    load_settings()
+    return bool(
+        sanitize_http_bearer_secret(os.getenv("SPARK_HTTP_API_PASSWORD", ""))
+        or sanitize_http_bearer_secret(os.getenv("XFYUN_HTTP_API_PASSWORD", ""))
+    )
 
 
 class Settings(BaseSettings):
