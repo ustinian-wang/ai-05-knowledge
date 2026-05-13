@@ -1,0 +1,25 @@
+backend/retrieval/search.py
+  s_e01496cf0409d8::t_e46b3c46958467 19,28
+backend/retrieval/qa.py
+  s_e01496cf0409d8::t_91685f68858ea5 33-37
+  s_e01496cf0409d8::t_930414efa705c0 11
+  s_e01496cf0409d8::t_b669179cc70ae2 76-83,89,93
+backend/retrieval/rerank.py
+  s_e01496cf0409d8::t_56ca37d4dab1ab 1,4,6-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "9e1ddcf31cc58b388ac9aaae3e2f34e07d19921c",
+  "prompts": {},
+  "sessions": {
+    "s_e01496cf0409d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3c034b4f-5e85-4de2-ade8-285f763860d4",
+        "model": "default"
+      },
+      "human_author": "jser <87244899@qq.com>"
+    }
+  }
+}
