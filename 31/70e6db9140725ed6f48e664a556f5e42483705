@@ -1,0 +1,21 @@
+README.md
+  s_e01496cf0409d8::t_bf97f13ec31b45 125-167,175-180,185,190,193-194,196-199,202-205,307-308
+  s_e01496cf0409d8::t_5a7bb8cb2bb85f 206-306
+  s_e01496cf0409d8::t_4eee9f0ee46173 168-174,181-184,186-189,191-192,195,200-201
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "3170e6db9140725ed6f48e664a556f5e42483705",
+  "prompts": {},
+  "sessions": {
+    "s_e01496cf0409d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3c034b4f-5e85-4de2-ade8-285f763860d4",
+        "model": "default"
+      },
+      "human_author": "jser <87244899@qq.com>"
+    }
+  }
+}
