@@ -4,6 +4,17 @@
 
 与 `projects/ai-01-chat` 等一致：**`backend/`（FastAPI）** + **`frontend/`（Vite）**；密钥写在 **`backend/.env`**（勿提交）。
 
+### 讯飞星火 Lite（HTTP / OpenAI 兼容）
+
+与 **`ai-03-writemd`**、**`ai-04-pdf`** 对齐：
+
+- **`OPENAI_API_KEY`**：控制台「HTTP 服务接口认证」中的 **APIPassword**，或文档/示例中的 **`APIKey:APISecret`**（英文冒号拼接）。
+- **`OPENAI_BASE_URL`**：可留空；当密钥形如 `xxx:yyy`（非 `sk-`）或 `OPENAI_MODEL=lite` 等时，会自动设为 `https://spark-api-open.xf-yun.com/v1`。
+- **`OPENAI_MODEL`**：Lite 使用 **`lite`**（未配置且走星火网关时，代码内默认亦为 `lite`）。
+- 本仓库 **`OPENAI_*` 为空** 时，会尝试从并列目录 **`projects/ai-03-writemd/backend/.env`** 合并同名变量，便于与本机已有 writemd 配置共用。
+
+官方说明见讯飞开放平台「星火认知大模型 HTTP 调用」文档；向量仍用本机 **sentence-transformers**，不向星火请求 embedding。
+
 ## 目录（后端）
 
 ```

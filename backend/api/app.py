@@ -7,7 +7,12 @@ from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from app.config import load_settings, settings
+from app.config import (
+    is_spark_gateway,
+    load_settings,
+    resolved_chat_model,
+    settings,
+)
 from pipelines.ingest import ingest_bytes, ingest_file
 from retrieval.qa import answer_question
 
@@ -41,6 +46,8 @@ def create_app() -> FastAPI:
             "project": "ai-05-knowledge",
             "backend_port": settings.backend_port,
             "embedding_model": settings.embedding_model,
+            "llm_gateway_spark": is_spark_gateway(),
+            "llm_chat_model": resolved_chat_model(),
         }
 
     @app.post("/api/v1/rag/ingest")

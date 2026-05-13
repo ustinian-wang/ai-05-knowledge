@@ -3,7 +3,12 @@ from __future__ import annotations
 
 from openai import OpenAI
 
-from app.config import Settings, load_settings
+from app.config import (
+    Settings,
+    load_settings,
+    normalize_openai_base_url,
+    resolved_chat_model,
+)
 from retrieval.rerank import rerank_chunks
 from retrieval.search import search_chunks
 
@@ -41,10 +46,12 @@ def answer_question(question: str, top_k: int | None = None) -> dict:
             "hits": hits,
         }
 
+    base_raw = (cfg.openai_base_url or "").strip() or None
     client = OpenAI(
         api_key=cfg.openai_api_key,
-        base_url=cfg.openai_base_url or None,
+        base_url=normalize_openai_base_url(base_raw),
     )
+    chat_model = resolved_chat_model()
     sys_prompt = (
         "你是严谨的知识库问答助手。请仅依据给定的「参考资料」作答；"
         "若资料不足以回答，请明确说明。使用简体中文，条理清晰。"
@@ -52,7 +59,7 @@ def answer_question(question: str, top_k: int | None = None) -> dict:
     user_prompt = f"参考资料：\n{context}\n\n用户问题：{question}"
     try:
         resp = client.chat.completions.create(
-            model=cfg.openai_model,
+            model=chat_model,
             messages=[
                 {"role": "system", "content": sys_prompt},
                 {"role": "user", "content": user_prompt},
@@ -63,7 +70,11 @@ def answer_question(question: str, top_k: int | None = None) -> dict:
         return {"answer": answer, "context": context, "hits": hits}
     except Exception as exc:  # noqa: BLE001 — demo 场景下兜底
         return {
-            "answer": f"LLM 调用失败（{type(exc).__name__}），请检查 OPENAI_API_KEY / 网关。以下为检索片段。",
+            "answer": (
+                f"LLM 调用失败（{type(exc).__name__}），请检查 OPENAI_API_KEY、"
+                "OPENAI_BASE_URL（星火可留空由程序补全）及 OPENAI_MODEL（Lite 用 lite）。"
+                "以下为检索片段。"
+            ),
             "context": context,
             "hits": hits,
             "error": str(exc),
