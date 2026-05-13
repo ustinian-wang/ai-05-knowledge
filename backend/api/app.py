@@ -1,10 +1,15 @@
 """FastAPI：健康检查、入库、问答。"""
 from __future__ import annotations
 
+import asyncio
+import json
+import queue
+import threading
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from app.config import (
@@ -13,6 +18,7 @@ from app.config import (
     resolved_chat_model,
     settings,
 )
+from pipelines.documents import list_documents
 from pipelines.ingest import ingest_bytes, ingest_file
 from retrieval.qa import answer_question
 
@@ -60,6 +66,53 @@ def create_app() -> FastAPI:
         data = await file.read()
         doc = ingest_bytes(file.filename or "upload.bin", data, title=title)
         return {"doc_id": doc.doc_id, "title": doc.title, "source": doc.source}
+
+    @app.get("/api/v1/rag/documents")
+    def rag_documents():
+        """已持久化入库的文档清单（data/docs）。"""
+        load_settings()
+        return {"items": list_documents()}
+
+    @app.post("/api/v1/rag/ingest_stream")
+    async def rag_ingest_stream(
+        file: UploadFile = File(...),
+        title: str | None = Form(default=None),
+    ):
+        """上传并以 SSE 推送处理阶段与进度（便于前端进度条）。"""
+        load_settings()
+        data = await file.read()
+        filename = file.filename or "upload.bin"
+
+        q: queue.Queue = queue.Queue()
+
+        def on_progress(stage: str, payload: dict) -> None:
+            q.put({"stage": stage, **payload})
+
+        def worker() -> None:
+            try:
+                ingest_bytes(filename, data, title=title, on_progress=on_progress)
+            except Exception as exc:  # noqa: BLE001
+                q.put({"stage": "error", "percent": 0, "message": str(exc)})
+
+        threading.Thread(target=worker, daemon=True).start()
+
+        async def event_gen():
+            loop = asyncio.get_event_loop()
+            while True:
+                item = await loop.run_in_executor(None, q.get)
+                yield f"data: {json.dumps(item, ensure_ascii=False)}\n\n"
+                if item.get("stage") in ("done", "error"):
+                    break
+
+        return StreamingResponse(
+            event_gen(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",
+            },
+        )
 
     @app.post("/api/v1/rag/ingest_path")
     def rag_ingest_path(body: IngestPathBody):

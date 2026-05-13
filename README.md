@@ -78,7 +78,9 @@ npm install && npm run dev
 | 方法 | 路径 | 说明 |
 |------|------|------|
 | GET | `/api/health` | 健康检查 |
+| GET | `/api/v1/rag/documents` | 已入库文档清单（`data/docs` + 分块数） |
 | POST | `/api/v1/rag/ingest` | `multipart/form-data`：`file` + 可选 `title` |
+| POST | `/api/v1/rag/ingest_stream` | 同上，响应 **`text/event-stream`（SSE）**，`data:` JSON 含 `stage` / `percent` / `message` |
 | POST | `/api/v1/rag/ingest_path` | JSON：`{"path":"/abs/path/file.pdf","title":"可选"}`（本机调试） |
 | POST | `/api/v1/rag/ask` | JSON：`{"question":"...","top_k":5}` |
 
