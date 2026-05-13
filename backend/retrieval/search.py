@@ -16,6 +16,7 @@ def get_collection():
 
 
 def search_chunks(question: str, top_k: int | None = None) -> list[dict]:
+    """从向量库取候选片段；top_k 为「实际拉取条数」，问答侧可先放大再 rerank 截断。"""
     k = top_k or settings.rag_top_k
     coll = get_collection()
     count = coll.count()
@@ -24,7 +25,7 @@ def search_chunks(question: str, top_k: int | None = None) -> list[dict]:
     qvec = embed_texts([question])[0]
     res = coll.query(
         query_embeddings=[qvec],
-        n_results=min(k, count),
+        n_results=min(max(k, 1), count),
         include=["documents", "metadatas", "distances"],
     )
     docs = res.get("documents") or [[]]
