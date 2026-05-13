@@ -11,6 +11,23 @@ BACKEND_ROOT = Path(__file__).resolve().parent.parent
 
 _SPARK_DEFAULT_BASE = "https://spark-api-open.xf-yun.com/v1"
 
+# 与 writemd / ai-04-pdf 并列时，优先用其已验证的星火配置（避免本仓库 .env 里误留 sk- 占位导致合并不进来）
+_SIBLING_DOTENV_CANDIDATES: tuple[Path, ...] = (
+    BACKEND_ROOT.parent.parent / "ai-03-writemd" / "backend" / ".env",
+    BACKEND_ROOT.parent.parent / "ai-04-pdf" / "backend" / ".env",
+)
+
+
+def sanitize_http_bearer_secret(raw: str) -> str:
+    """去掉首尾空白、包裹引号、重复的 Bearer 前缀（SDK 会自行加 Bearer）。"""
+    s = (raw or "").strip()
+    if len(s) >= 2 and ((s[0] == s[-1] == '"') or (s[0] == s[-1] == "'")):
+        s = s[1:-1].strip()
+    low = s[:7].lower()
+    if low == "bearer ":
+        s = s[7:].strip()
+    return s
+
 
 def _key_looks_like_spark_bearer(key: str) -> bool:
     """讯飞 Bearer 常为 APPID:APISecret；与 OpenAI sk-... 区分。"""
@@ -18,6 +35,18 @@ def _key_looks_like_spark_bearer(key: str) -> bool:
     if not k or k.startswith("sk-"):
         return False
     return ":" in k
+
+
+def _looks_like_spark_route() -> bool:
+    """当前环境是否按「走星火网关」配置（用于决定是否用兄弟项目密钥覆盖 sk- 占位）。"""
+    base = os.getenv("OPENAI_BASE_URL", "").strip().lower()
+    model = os.getenv("OPENAI_MODEL", "").strip().lower()
+    if "xf-yun.com" in base:
+        return True
+    if model == "lite" or model == "spark-x" or model.startswith("spark-"):
+        return True
+    key = os.getenv("OPENAI_API_KEY", "").strip()
+    return _key_looks_like_spark_bearer(key)
 
 
 def _spark_intent_from_env() -> bool:
@@ -38,26 +67,55 @@ def _spark_intent_from_env() -> bool:
     )
 
 
-def _merge_writemd_openai_if_needed() -> None:
-    """本仓库 .env 中 OPENAI_* 为空时，尝试合并并列 ai-03-writemd 的 .env。"""
-    sibling = BACKEND_ROOT.parent.parent / "ai-03-writemd" / "backend" / ".env"
-    if not sibling.is_file():
-        return
-    vals = dotenv_values(sibling)
-    for key in (
+def _merge_sibling_dotenv() -> None:
+    """
+    合并并列项目 backend/.env 中的 OPENAI_* / SPARK_HTTP_*。
+
+    - 默认：本仓库某键为空时，用兄弟项目同名的值填充（与原先 writemd-only 行为一致）。
+    - 额外：若判定走星火路由，且本仓库 OPENAI_API_KEY 为 OpenAI 的 sk- 占位，而兄弟项目提供非 sk- 密钥，
+      则用兄弟项目的 OPENAI_API_KEY 覆盖（解决「本仓库误留 sk- 导致永远合并不进 writemd 星火 key」）。
+    """
+    keys = (
         "OPENAI_API_KEY",
         "OPENAI_BASE_URL",
         "OPENAI_MODEL",
         "SPARK_HTTP_API_PASSWORD",
         "XFYUN_HTTP_API_PASSWORD",
-    ):
-        if os.getenv(key, "").strip():
+    )
+
+    merged: dict[str, str] = {}
+    for path in _SIBLING_DOTENV_CANDIDATES:
+        if not path.is_file():
             continue
-        raw = vals.get(key)
-        if raw is None:
+        vals = dotenv_values(path)
+        for key in keys:
+            if key in merged:
+                continue
+            raw = vals.get(key)
+            if raw is None:
+                continue
+            s = str(raw).strip()
+            if s:
+                merged[key] = s
+
+    if not merged:
+        return
+
+    spark_route = _looks_like_spark_route()
+    local_key = os.getenv("OPENAI_API_KEY", "").strip()
+
+    for key, s in merged.items():
+        cur = os.getenv(key, "").strip()
+        if not cur:
+            os.environ[key] = s
             continue
-        s = str(raw).strip()
-        if s:
+        if (
+            key == "OPENAI_API_KEY"
+            and spark_route
+            and local_key.startswith("sk-")
+            and s
+            and not s.startswith("sk-")
+        ):
             os.environ[key] = s
 
 
@@ -69,7 +127,7 @@ def _ensure_spark_openai_base() -> None:
 
 def load_settings() -> None:
     load_dotenv(BACKEND_ROOT / ".env", override=True)
-    _merge_writemd_openai_if_needed()
+    _merge_sibling_dotenv()
     _ensure_spark_openai_base()
 
 
@@ -95,17 +153,6 @@ def resolved_chat_model() -> str:
     if is_spark_gateway():
         return "lite"
     return "gpt-4o-mini"
-
-
-def sanitize_http_bearer_secret(raw: str) -> str:
-    """去掉首尾空白、包裹引号、重复的 Bearer 前缀（SDK 会自行加 Bearer）。"""
-    s = (raw or "").strip()
-    if len(s) >= 2 and ((s[0] == s[-1] == '"') or (s[0] == s[-1] == "'")):
-        s = s[1:-1].strip()
-    low = s[:7].lower()
-    if low == "bearer ":
-        s = s[7:].strip()
-    return s
 
 
 def spark_chat_api_key() -> str:

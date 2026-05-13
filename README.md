@@ -9,10 +9,10 @@
 与 **`ai-03-writemd`**、**`ai-04-pdf`** 对齐：
 
 - **`OPENAI_API_KEY`**：走星火 HTTP 时，应填控制台 **「HTTP 服务接口认证」** 中的 **APIPassword**（单列）。**不要**把 WebSocket 的 `APPID:APISecret` 当作 Bearer，否则易 401 / `apikey not found`。
-- **推荐**：单独配置 **`SPARK_HTTP_API_PASSWORD=你的APIPassword`**（本仓库问答会**优先**读它，可与 writemd 对齐）；若并列存在 `projects/ai-03-writemd/backend/.env` 且本仓库未配，会自动合并该变量。
+- **推荐**：单独配置 **`SPARK_HTTP_API_PASSWORD=你的APIPassword`**（本仓库问答会**优先**读它）。
 - **`OPENAI_BASE_URL`**：可留空；走星火时程序会设为 `https://spark-api-open.xf-yun.com/v1`。
 - **`OPENAI_MODEL`**：Lite 使用 **`lite`**。
-- 本仓库 **`OPENAI_*` / `SPARK_HTTP_API_PASSWORD` 为空** 时，会尝试从并列目录 **`projects/ai-03-writemd/backend/.env`** 合并同名变量，便于与本机已有 writemd 配置共用。
+- **自动合并**：本仓库某键为空时，会按顺序合并 **`projects/ai-03-writemd/backend/.env`**、**`projects/ai-04-pdf/backend/.env`** 中的 **`OPENAI_*` / `SPARK_HTTP_*`**。若当前为 **Lite/星火路由**，但本仓库 **`OPENAI_API_KEY` 误留 `sk-...` 占位**，会用兄弟项目中 **非 `sk-` 的 `OPENAI_API_KEY`** 覆盖，避免「其它项目能调星火、这里却 401」。
 
 官方说明见讯飞开放平台「星火认知大模型 HTTP 调用」文档；向量仍用本机 **sentence-transformers**，不向星火请求 embedding。
 
