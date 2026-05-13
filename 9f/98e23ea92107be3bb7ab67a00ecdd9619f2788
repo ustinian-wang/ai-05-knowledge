@@ -1,0 +1,36 @@
+backend/app/config.py
+  s_e01496cf0409d8::t_0545f1d6f5589c 47-53
+  s_e01496cf0409d8::t_5a7cdfe2e89b46 100-134
+  s_e01496cf0409d8::t_cc62636a7548b2 28-31
+backend/api/app.py
+  s_e01496cf0409d8::t_04b80ad61b4f68 20
+  s_e01496cf0409d8::t_0d67f6e3a0c812 58
+README.md
+  s_e01496cf0409d8::t_7f40c90cbba412 15
+  s_e01496cf0409d8::t_3929283d0e6309 11-14
+backend/retrieval/qa.py
+  s_e01496cf0409d8::t_c40952abe310c0 96-99,101-102
+  s_e01496cf0409d8::t_b4c59f36a94aa4 51-52,65
+  s_e01496cf0409d8::t_8036c807b4115e 4-5
+  s_e01496cf0409d8::t_7f8da8d4e80cf0 53-61
+  s_e01496cf0409d8::t_bb4e06bc426fa5 10,15-16
+  s_e01496cf0409d8::t_addbe0fdf3e2f7 75-77,81-88
+backend/.env.example
+  s_e01496cf0409d8::t_f4c5e020bd07f0 3-10,12,15-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "9f98e23ea92107be3bb7ab67a00ecdd9619f2788",
+  "prompts": {},
+  "sessions": {
+    "s_e01496cf0409d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3c034b4f-5e85-4de2-ade8-285f763860d4",
+        "model": "default"
+      },
+      "human_author": "jser <87244899@qq.com>"
+    }
+  }
+}
